@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TikTok LIVE 報酬早見表（エージェンシー用）</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif; background: #f5f5f3; color: #1a1a1a; }
+.wrap { padding: 1rem; max-width: 480px; margin: 0 auto; }
+.role-bar { background: #fff; border: 0.5px solid #ddd; border-radius: 12px; padding: 0.75rem 1rem; margin-bottom: 0.75rem; }
+.role-label { font-size: 11px; color: #888; margin-bottom: 6px; }
+.role-btns { display: flex; gap: 6px; }
+.role-btn { flex: 1; padding: 7px 4px; font-size: 11px; font-weight: 500; border: 0.5px solid #ccc; border-radius: 8px; background: #f0ede8; color: #666; cursor: pointer; text-align: center; transition: all 0.15s; }
+.role-btn.active { color: #fff; border-color: transparent; }
+.role-btn[data-role="1"].active { background: #D85A30; }
+.role-btn[data-role="2"].active { background: #185FA5; }
+.role-btn[data-role="3"].active { background: #3B6D11; }
+.role-btn[data-role="4"].active { background: #854F0B; }
+.rate-bar { display: flex; align-items: center; justify-content: space-between; background: #f0ede8; border-radius: 8px; padding: 6px 12px; margin-bottom: 0.75rem; font-size: 12px; }
+.rate-val { font-weight: 500; color: #1a1a1a; }
+.rate-status { font-size: 10px; color: #888; margin-left: 4px; }
+.nav-tabs { display: flex; gap: 4px; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.tab-btn { flex: 1; min-width: 60px; padding: 6px 4px; font-size: 11px; font-weight: 500; border: 0.5px solid #ccc; border-radius: 8px; background: #e8e8e6; color: #666; cursor: pointer; text-align: center; transition: all 0.15s; }
+.tab-btn.active { background: #fff; border-color: #999; color: #1a1a1a; }
+.page { display: none; }
+.page.active { display: block; }
+.section-title { font-size: 14px; font-weight: 500; color: #1a1a1a; margin: 1.25rem 0 0.75rem; border-left: 3px solid #D85A30; padding-left: 8px; }
+.card { background: #fff; border: 0.5px solid #ddd; border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; }
+.card-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 0.5px solid #eee; font-size: 13px; }
+.card-row:last-child { border-bottom: none; }
+.card-label { color: #666; flex: 1; }
+.card-val { font-weight: 500; color: #1a1a1a; text-align: right; }
+.card-val.accent { color: #D85A30; }
+.info-box { background: #f0ede8; border-radius: 8px; padding: 0.75rem 1rem; font-size: 12px; color: #555; margin-bottom: 0.75rem; line-height: 1.7; }
+.info-box strong { color: #1a1a1a; font-weight: 500; }
+.milestone-card { background: #fff; border: 0.5px solid #ddd; border-radius: 12px; padding: 1rem; margin-bottom: 0.75rem; }
+.milestone-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.milestone-name { font-size: 14px; font-weight: 500; }
+.milestone-diamonds { font-size: 12px; color: #666; margin-bottom: 8px; }
+.milestone-amounts { display: flex; gap: 8px; }
+.amount-box { flex: 1; background: #f5f5f3; border-radius: 8px; padding: 6px 8px; text-align: center; }
+.amount-label { font-size: 10px; color: #888; margin-bottom: 2px; }
+.amount-val { font-size: 14px; font-weight: 500; color: #D85A30; }
+.badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 999px; }
+.badge-amber { background: #FAEEDA; color: #854F0B; }
+.badge-blue { background: #E6F1FB; color: #185FA5; }
+.badge-red { background: #FAECE7; color: #993C1D; }
+.lv-selector { display: flex; gap: 6px; margin-bottom: 1rem; flex-wrap: wrap; }
+.lv-btn { padding: 5px 12px; font-size: 12px; font-weight: 500; border: 0.5px solid #ccc; border-radius: 999px; background: #f0ede8; color: #666; cursor: pointer; transition: all 0.15s; }
+.lv-btn.active { background: #D85A30; border-color: #D85A30; color: #fff; }
+.condition-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1rem; }
+.cond-box { background: #f5f5f3; border-radius: 8px; padding: 8px 10px; }
+.cond-label { font-size: 10px; color: #888; margin-bottom: 2px; }
+.cond-val { font-size: 13px; font-weight: 500; color: #1a1a1a; }
+.diamond-input { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; }
+.diamond-input input { flex: 1; padding: 8px 12px; font-size: 14px; border: 0.5px solid #ccc; border-radius: 8px; background: #fff; color: #1a1a1a; outline: none; }
+.diamond-input input:focus { border-color: #D85A30; }
+.result-block { border-left: 3px solid #D85A30; background: #f5f5f3; border-radius: 8px; margin-bottom: 0.5rem; padding: 0.75rem 1rem; }
+.result-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 3px 0; }
+.result-big { font-size: 20px; font-weight: 500; color: #D85A30; }
+.note { font-size: 11px; color: #888; line-height: 1.5; padding: 6px 0; }
+h1 { font-size: 15px; font-weight: 500; color: #1a1a1a; padding: 1rem 0 0.1rem; }
+.role-tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 10px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
+.subtitle { font-size: 11px; color: #888; margin-bottom: 0.75rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>TikTok LIVE 報酬早見表
+  <span id="role-tag" class="role-tag" style="background:#FAECE7;color:#993C1D;">一次 70%</span>
+</h1>
+<p class="subtitle">エージェンシー用 — 役職を選択してください</p>
+
+<div class="role-bar">
+  <div class="role-label">役職選択（報酬率が変わります）</div>
+  <div class="role-btns">
+    <button class="role-btn active" data-role="1" onclick="setRole(1)">一次<br><span style="font-size:13px;font-weight:500;">70%</span></button>
+    <button class="role-btn" data-role="2" onclick="setRole(2)">二次<br><span style="font-size:13px;font-weight:500;">60%</span></button>
+    <button class="role-btn" data-role="3" onclick="setRole(3)">三次<br><span style="font-size:13px;font-weight:500;">50%</span></button>
+    <button class="role-btn" data-role="4" onclick="setRole(4)">代理店<br><span style="font-size:13px;font-weight:500;">10%</span></button>
+  </div>
+</div>
+
+<div class="rate-bar">
+  <span>USD/JPY 為替レート</span>
+  <span>
+    <span class="rate-val" id="fx-display">取得中...</span>
+    <span class="rate-status" id="fx-status"></span>
+  </span>
+</div>
+
+<div class="nav-tabs">
+  <button class="tab-btn active" onclick="showPage('overview', this)">概要</button>
+  <button class="tab-btn" onclick="showPage('rookie', this)">ルーキー</button>
+  <button class="tab-btn" onclick="showPage('active', this)">アクティブ</button>
+  <button class="tab-btn" onclick="showPage('revenue', this)">レベニュー</button>
+  <button class="tab-btn" onclick="showPage('calc', this)">報酬計算</button>
+</div>
+
+<!-- 概要 -->
+<div id="overview" class="page active">
+  <div class="info-box">
+    上部の役職ボタンを切り替えると全ての金額が自動再計算されます。<br>
+    <strong>一次：70%</strong> / <strong>二次：60%</strong>（代理店様10%）/ <strong>三次：50%</strong> / <strong>代理店様：10%</strong>
+  </div>
+  <div class="section-title">基本単位・レート</div>
+  <div class="card">
+    <div class="card-row"><span class="card-label">1コイン（ギフター）</span><span class="card-val">= 1ダイヤ</span></div>
+    <div class="card-row"><span class="card-label">1ダイヤ換算</span><span class="card-val">= 0.75円</span></div>
+    <div class="card-row"><span class="card-label">為替レート（自動）</span><span class="card-val" id="ov-fx">取得中...</span></div>
+    <div class="card-row"><span class="card-label">あなたの報酬率</span><span class="card-val accent" id="ov-pct">70%</span></div>
+  </div>
+  <div class="section-title">マイルストーンボーナス一覧</div>
+  <div class="card">
+    <div class="card-row"><span class="card-label">マイルストーン 0.5（$150）</span><span class="card-val accent" id="ov-m05">-</span></div>
+    <div class="card-row"><span class="card-label">マイルストーン 1（$300）</span><span class="card-val accent" id="ov-m1">-</span></div>
+    <div class="card-row"><span class="card-label">マイルストーン 2（$1,000）</span><span class="card-val accent" id="ov-m2">-</span></div>
+    <div class="card-row" style="background:#f5f5f3;margin:0 -1rem;padding:6px 1rem;border-radius:0 0 12px 12px;">
+      <span class="card-label" style="font-weight:500;">合計上限</span>
+      <span class="card-val accent" style="font-size:16px;" id="ov-total">-</span>
+    </div>
+  </div>
+</div>
+
+<!-- ルーキー -->
+<div id="rookie" class="page">
+  <div class="info-box">
+    <strong>対象：</strong>入会から90日以内（ひとりにつき1回のみ）<br>
+    <strong>最小要件：</strong>毎月7日以上の有効LIVE、15時間以上の月間配信時間<br>
+    報酬 = ボーナス（$）× 為替レート × <strong id="rk-pct-label">70%</strong>
+  </div>
+  <div class="section-title">マイルストーン詳細</div>
+  <div class="milestone-card">
+    <div class="milestone-header"><span class="milestone-name">マイルストーン 0.5</span><span class="badge badge-amber">$150</span></div>
+    <div class="milestone-diamonds">75,000個を超えるダイヤモンドを獲得</div>
+    <div class="milestone-amounts">
+      <div class="amount-box"><div class="amount-label">TikTok支払い</div><div class="amount-val" style="color:#888;">$150</div></div>
+      <div class="amount-box"><div class="amount-label">あなたの取り分</div><div class="amount-val" id="rk-m05">-</div></div>
+    </div>
+  </div>
+  <div class="milestone-card">
+    <div class="milestone-header"><span class="milestone-name">マイルストーン 1</span><span class="badge badge-blue">$300</span></div>
+    <div class="milestone-diamonds">150,000個を超えるダイヤモンドを獲得</div>
+    <div class="milestone-amounts">
+      <div class="amount-box"><div class="amount-label">TikTok支払い</div><div class="amount-val" style="color:#888;">$300</div></div>
+      <div class="amount-box"><div class="amount-label">あなたの取り分</div><div class="amount-val" id="rk-m1">-</div></div>
+    </div>
+  </div>
+  <div class="milestone-card">
+    <div class="milestone-header"><span class="milestone-name">マイルストーン 2</span><span class="badge badge-red">$1,000</span></div>
+    <div class="milestone-diamonds">500,000個を超えるダイヤモンドを獲得</div>
+    <div class="milestone-amounts">
+      <div class="amount-box"><div class="amount-label">TikTok支払い</div><div class="amount-val" style="color:#888;">$1,000</div></div>
+      <div class="amount-box"><div class="amount-label">あなたの取り分</div><div class="amount-val" id="rk-m2">-</div></div>
+    </div>
+  </div>
+  <p class="note" id="rk-total-note">※合計上限: -</p>
+</div>
+
+<!-- アクティブ -->
+<div id="active" class="page">
+  <div class="info-box">
+    報酬 = ダイヤ数 ÷ 10,000 × $0.51212 × <strong id="ac-pct-label">70%</strong> × 為替レート<br>
+    ⚠️ 23時以降の配信は23:59までカウント（1日として換算されない）
+  </div>
+  <div class="section-title">レベル別獲得条件</div>
+  <div class="lv-selector">
+    <button class="lv-btn active" onclick="showLv(1)">Lv1</button>
+    <button class="lv-btn" onclick="showLv(2)">Lv2</button>
+    <button class="lv-btn" onclick="showLv(3)">Lv3</button>
+    <button class="lv-btn" onclick="showLv(4)">Lv4</button>
+    <button class="lv-btn" onclick="showLv(5)">Lv5</button>
+  </div>
+  <div class="condition-grid">
+    <div class="cond-box"><div class="cond-label">ダイヤ数/月</div><div class="cond-val" id="cond-diamond">150,000以上</div></div>
+    <div class="cond-box"><div class="cond-label">有効配信日数</div><div class="cond-val" id="cond-days">18日以上</div></div>
+    <div class="cond-box"><div class="cond-label">月間LIVE時間</div><div class="cond-val" id="cond-hours">40時間以上</div></div>
+    <div class="cond-box"><div class="cond-label">TikTok報酬率</div><div class="cond-val" style="color:#D85A30;">$0.51212/万ダイヤ</div></div>
+  </div>
+  <div class="section-title" id="lv-detail-title">Lv1 — 報酬早見表</div>
+  <div class="card" id="lv-table"></div>
+</div>
+
+
+<!-- レベニュー -->
+<div id="revenue" class="page">
+  <div class="info-box">
+    前月比のダイヤ数増加率に応じて追加ボーナスが発生します。<br>
+    ※レベニューボーナスはパーセンテージに関係なく共通です。
+  </div>
+  <div class="section-title">レベル別条件と報酬率</div>
+  <div style="background:#fff;border:0.5px solid #ddd;border-radius:12px;padding:1rem;margin-bottom:0.75rem;">
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:0.5px solid #eee;">
+      <div style="width:36px;height:36px;border-radius:50%;background:#EAF3DE;color:#3B6D11;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0;">Lv1</div>
+      <div><div style="font-size:12px;color:#666;">先月比 ≥ 100%</div><div style="font-size:15px;font-weight:500;">報酬ダイヤ × 9%</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:0.5px solid #eee;">
+      <div style="width:36px;height:36px;border-radius:50%;background:#E6F1FB;color:#185FA5;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0;">Lv2</div>
+      <div><div style="font-size:12px;color:#666;">先月比 ≥ 110%</div><div style="font-size:15px;font-weight:500;">報酬ダイヤ × 11%</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:0.5px solid #eee;">
+      <div style="width:36px;height:36px;border-radius:50%;background:#FAEEDA;color:#854F0B;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0;">Lv3</div>
+      <div><div style="font-size:12px;color:#666;">先月比 ≥ 120%</div><div style="font-size:15px;font-weight:500;">報酬ダイヤ × 13%</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0;">
+      <div style="width:36px;height:36px;border-radius:50%;background:#FAECE7;color:#993C1D;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0;">Lv4</div>
+      <div><div style="font-size:12px;color:#666;">先月比 ≥ 130%</div><div style="font-size:15px;font-weight:500;">報酬ダイヤ × 15%</div></div>
+    </div>
+  </div>
+  <div class="section-title">計算例</div>
+  <div class="card">
+    <div class="card-row"><span class="card-label">先月10M → 今月10M（100%）</span><span class="card-val">報酬 0.9M</span></div>
+    <div class="card-row"><span class="card-label">先月10M → 今月11M（110%）</span><span class="card-val accent">報酬 1.2M</span></div>
+    <div class="card-row"><span class="card-label">先月10M → 今月12M（120%）</span><span class="card-val accent">報酬 1.6M</span></div>
+    <div class="card-row"><span class="card-label">先月10M → 今月13M（130%）</span><span class="card-val accent">報酬 2.0M</span></div>
+  </div>
+</div>
+
+<!-- 報酬計算 -->
+<div id="calc" class="page">
+  <div class="info-box">
+    計算式：ダイヤ数 ÷ 10,000 × $0.51212 × <strong id="calc-pct-label">70%</strong> × 為替レート
+  </div>
+  <div class="section-title">ダイヤ数を入力</div>
+  <div class="diamond-input">
+    <input type="number" id="diamond-input" placeholder="例: 500000" oninput="calcReward()" />
+    <span style="font-size:13px;color:#888;">ダイヤ</span>
+  </div>
+  <div id="calc-result" style="display:none;">
+    <div class="section-title">計算結果</div>
+    <div class="result-block">
+      <div class="result-row"><span style="color:#666;">ダイヤ数</span><span id="res-diamonds" style="font-weight:500;">-</span></div>
+      <div class="result-row"><span style="color:#666;">TikTok支払い総額</span><span id="res-usd-raw" style="font-weight:500;">-</span></div>
+      <div class="result-row"><span style="color:#666;">あなたの取り分（$）</span><span id="res-usd-pct" style="font-weight:500;color:#D85A30;">-</span></div>
+      <div class="result-row" style="margin-top:8px;padding-top:8px;border-top:0.5px solid #ddd;">
+        <span style="font-weight:500;">円換算（あなたの報酬）</span>
+        <span class="result-big" id="res-jpy">-</span>
+      </div>
+    </div>
+    <p class="note" id="calc-note"></p>
+    <div class="section-title" style="margin-top:1.25rem;">全レベル達成条件との比較</div>
+    <div id="calc-all-lv"></div>
+  </div>
+</div>
+
+</div>
+<script>
+const TIKTOK_RATE = 0.51212;
+const ROLES = {
+  1: { label: '一次エージェンシー', pct: 0.70, bg: '#FAECE7', fg: '#993C1D' },
+  2: { label: '二次エージェンシー', pct: 0.60, bg: '#E6F1FB', fg: '#185FA5' },
+  3: { label: '三次代理店', pct: 0.50, bg: '#EAF3DE', fg: '#3B6D11' },
+  4: { label: '代理店様（ジュッパー）', pct: 0.10, bg: '#FAEEDA', fg: '#854F0B' }
+};
+const LV_DATA = {
+  1:{ days:'18日以上', hours:'40時間以上' },
+  2:{ days:'20日以上', hours:'80時間以上' },
+  3:{ days:'20日以上', hours:'100時間以上' },
+  4:{ days:'22日以上', hours:'120時間以上' },
+  5:{ days:'24日以上', hours:'140時間以上' }
+};
+const TABLE_ROWS = [150000,200000,300000,400000,500000,600000,700000,800000,900000,1000000,1500000,2000000,2500000,3000000];
+const LV_COLORS = ['#EAF3DE','#E6F1FB','#FAEEDA','#FAECE7','#EEEDFE'];
+const LV_TCOLORS = ['#3B6D11','#185FA5','#854F0B','#993C1D','#534AB7'];
+
+let currentRole = 1;
+let currentLv = 1;
+let FX = null;
+
+async function fetchFX() {
+  try {
+    const r = await fetch('https://open.er-api.com/v6/latest/USD');
+    const d = await r.json();
+    FX = d.rates.JPY;
+    document.getElementById('fx-display').textContent = '¥' + FX.toFixed(3);
+    document.getElementById('fx-status').textContent = '自動取得';
+    document.getElementById('ov-fx').textContent = '¥' + FX.toFixed(3) + ' / $';
+  } catch(e) {
+    FX = 159.539;
+    document.getElementById('fx-display').textContent = '¥' + FX.toFixed(3);
+    document.getElementById('fx-status').textContent = '(固定値)';
+    document.getElementById('ov-fx').textContent = '¥' + FX.toFixed(3) + ' / $（固定）';
+  }
+  refreshAll();
+}
+
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function setRole(r) {
+  currentRole = r;
+  document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.role-btn[data-role="'+r+'"]').classList.add('active');
+  const role = ROLES[r];
+  const tag = document.getElementById('role-tag');
+  const lbl = {1:'一次',2:'二次',3:'三次',4:'代理店'}[r]; tag.textContent = lbl + ' ' + (role.pct*100) + '%';
+  tag.style.background = role.bg;
+  tag.style.color = role.fg;
+  refreshAll();
+}
+
+function refreshAll() {
+  if (!FX) return;
+  const pct = ROLES[currentRole].pct;
+  const pctLabel = (pct*100) + '%';
+  document.getElementById('ov-pct').textContent = pctLabel;
+  document.getElementById('rk-pct-label').textContent = pctLabel;
+  document.getElementById('ac-pct-label').textContent = pctLabel;
+  document.getElementById('calc-pct-label').textContent = pctLabel;
+
+  const m05 = Math.round(150 * pct * FX);
+  const m1  = Math.round(300 * pct * FX);
+  const m2  = Math.round(1000 * pct * FX);
+  document.getElementById('ov-m05').textContent = '¥' + m05.toLocaleString();
+  document.getElementById('ov-m1').textContent  = '¥' + m1.toLocaleString();
+  document.getElementById('ov-m2').textContent  = '¥' + m2.toLocaleString();
+  document.getElementById('ov-total').textContent = '¥' + (m05+m1+m2).toLocaleString();
+  document.getElementById('rk-m05').textContent = '¥' + m05.toLocaleString();
+  document.getElementById('rk-m1').textContent  = '¥' + m1.toLocaleString();
+  document.getElementById('rk-m2').textContent  = '¥' + m2.toLocaleString();
+  document.getElementById('rk-total-note').textContent = '※合計上限: ¥' + (m05+m1+m2).toLocaleString();
+  refreshLvTable();
+  calcReward();
+}
+
+function showLv(lv) {
+  currentLv = lv;
+  document.querySelectorAll('.lv-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.lv-btn')[lv-1].classList.add('active');
+  const d = LV_DATA[lv];
+  document.getElementById('cond-diamond').textContent = '150,000以上';
+  document.getElementById('cond-days').textContent = d.days;
+  document.getElementById('cond-hours').textContent = d.hours;
+  document.getElementById('lv-detail-title').textContent = 'Lv'+lv+' — 報酬早見表';
+  refreshLvTable();
+}
+
+function refreshLvTable() {
+  if (!FX) return;
+  const pct = ROLES[currentRole].pct;
+  document.getElementById('lv-table').innerHTML = TABLE_ROWS.map(d => {
+    const usd = (d / 10000) * TIKTOK_RATE * pct;
+    const jpy = Math.round(usd * FX);
+    return `<div class="card-row">
+      <span class="card-label">${(d/10000).toFixed(0)}万ダイヤ</span>
+      <span class="card-val" style="font-size:12px;">$${usd.toFixed(2)} / <span style="color:#D85A30;">¥${jpy.toLocaleString()}</span></span>
+    </div>`;
+  }).join('');
+}
+
+function calcReward() {
+  const val = parseInt(document.getElementById('diamond-input').value) || 0;
+  const res = document.getElementById('calc-result');
+  if (val < 1000 || !FX) { res.style.display = 'none'; return; }
+  res.style.display = 'block';
+  const pct = ROLES[currentRole].pct;
+  const usdRaw  = (val / 10000) * TIKTOK_RATE;
+  const usdMine = usdRaw * pct;
+  const jpy = Math.round(usdMine * FX);
+  document.getElementById('res-diamonds').textContent = val.toLocaleString() + ' ダイヤ';
+  document.getElementById('res-usd-raw').textContent  = '$' + usdRaw.toFixed(4);
+  document.getElementById('res-usd-pct').textContent  = '$' + usdMine.toFixed(4) + '（' + (pct*100) + '%）';
+  document.getElementById('res-jpy').textContent = '¥' + jpy.toLocaleString();
+  document.getElementById('calc-note').textContent = '為替レート: $1 = ¥' + FX.toFixed(3);
+  document.getElementById('calc-all-lv').innerHTML = [1,2,3,4,5].map(lv => {
+    const d = LV_DATA[lv];
+    const ok = val >= 150000;
+    return `<div style="border-left:3px solid ${LV_TCOLORS[lv-1]};background:${ok?'#f5f5f3':'#fafafa'};border-radius:8px;margin-bottom:0.5rem;padding:0.75rem 1rem;opacity:${ok?1:0.55};">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+        <span style="background:${LV_COLORS[lv-1]};color:${LV_TCOLORS[lv-1]};font-size:12px;font-weight:500;padding:2px 8px;border-radius:999px;">Lv${lv}</span>
+        <span style="font-size:11px;color:#888;">${d.days} / ${d.hours}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <span style="font-size:12px;color:#888;">$${usdMine.toFixed(2)}</span>
+        <span style="font-size:18px;font-weight:500;color:${ok?'#D85A30':'#bbb'};">¥${jpy.toLocaleString()}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+showLv(1);
+fetchFX();
+</script>
+</body>
+</html>
